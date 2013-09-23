@@ -684,7 +684,6 @@ This is was done due to the problem reported here:
     (define-key map [(control c) (control f)] 'php-search-documentation)
     (define-key map [(meta tab)] 'php-complete-function)
     (define-key map [(control c) (control m)] 'php-browse-manual)
-    (define-key map [(control .)] 'php-show-arglist)
     (define-key map [(control c) (control r)] 'php-send-region)
     ;; Use the Emacs standard indentation binding. This may upset c-mode
     ;; which does not follow this at the moment, but I see no better
@@ -963,21 +962,6 @@ current `tags-file-name'."
                        (point))))
       nil)))
 
-(defun php-show-arglist ()
-  (interactive)
-  (let* ((tagname (php-get-pattern))
-         (buf (find-tag-noselect tagname nil nil))
-         arglist)
-    (with-current-buffer buf
-      (goto-char (point-min))
-      (when (re-search-forward
-             (format "function\\s-+%s\\s-*(\\([^{]*\\))" tagname)
-             nil t)
-        (setq arglist (buffer-substring-no-properties
-                       (match-beginning 1) (match-end 1)))))
-    (if arglist
-        (message "Arglist for %s: %s" tagname arglist)
-        (message "Unknown function: %s" tagname))))
 
 (defun php-search-local-documentation ()
   "Search the local PHP documentation (i.e. in `php-manual-path')
