@@ -430,7 +430,7 @@ This variable can take one of the following symbol values:
   ;; falls back to java, so no need to specify the language
   php (append (remove ">>>=" (c-lang-const c-assignment-operators))
               '(".=")))
- 
+
 (c-lang-defconst beginning-of-defun-function
   php 'php-beginning-of-defun)
 
@@ -606,13 +606,21 @@ code and modules."
 
 (c-add-style
  "drupal"
- '("php"
-   (c-basic-offset . 2)
+ '((c-basic-offset . 2)
    (c-offsets-alist . ((case-label . +)
-                       (arglist-close . 0)
-                       (arglist-intro . +)
-                       (arglist-cont-nonempty . c-lineup-math)
-                       (statement-cont . +)))))
+                       (topmost-intro-cont . (first c-lineup-cascaded-calls
+                                                    php-lineup-arglist-intro))
+                       (brace-list-intro . +)
+                       (brace-list-entry . c-lineup-cascaded-calls)
+                       (arglist-close . php-lineup-arglist-close)
+                       (arglist-intro . php-lineup-arglist-intro)
+                       (arglist-cont-nonempty . (first c-lineup-math c-lineup-cascaded-calls))
+                       (knr-argdecl . [0])
+                       (statement-cont . (first c-lineup-cascaded-calls +))))
+   (c-comment-only-line-offset (0 . 0))
+   (c-hanging-braces-alist . ((defun-open after)
+                              (substatement-open after)))
+   (c-cleanup-list . (brace-else-brace brace-elseif-brace))))
 
 (defun php-enable-drupal-coding-style ()
   "Makes php-mode use coding styles that are preferable for
